@@ -2,8 +2,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import prisma from '../lib/prisma';
 import Shell from '../components/Shell';
-import { signIn, useSession, getSession } from 'next-auth/client';
-import { ClockIcon, CheckIcon, InformationCircleIcon } from '@heroicons/react/outline';
+import {getSession, useSession} from 'next-auth/client';
+import {CheckIcon, ClockIcon, InformationCircleIcon} from '@heroicons/react/outline';
 import DonateBanner from '../components/DonateBanner';
 
 function classNames(...classes) {
@@ -71,7 +71,7 @@ export default function Home(props) {
             </Head>
 
             <Shell heading="Dashboard">
-                <div className="grid grid-cols-3 gap-4">
+                <div className="md:grid grid-cols-3 gap-4">
                     <div className="col-span-2">
                         <div className="rounded-lg bg-white shadow">
                             <div className="pt-5 pb-2 px-6 sm:flex sm:items-center sm:justify-between">
@@ -92,7 +92,7 @@ export default function Home(props) {
                                 ))}
                             </dl>
                         </div>
-                        <div className="mt-8 bg-white shadow overflow-hidden sm:rounded-md">
+                        <div className="mt-8 bg-white shadow overflow-hidden rounded-md">
                             <div className="pt-5 pb-2 px-6 sm:flex sm:items-center sm:justify-between">
                                 <h3 className="text-lg leading-6 font-medium text-gray-900">
                                     Your event types
@@ -124,15 +124,20 @@ export default function Home(props) {
                                         </div>
                                     </li>
                                 ))}
+                                {props.eventTypes.length == 0 &&
+                                    <div className="text-center text-gray-400 py-12">
+                                        <p>You haven't created any event types.</p>
+                                    </div>
+                                }
                             </ul>
                         </div>
-                        <div className="mt-8 bg-white shadow overflow-hidden sm:rounded-md p-6">
-                            <div className="flex">
-                                <div className="w-1/2 self-center">
+                        <div className="mt-8 bg-white shadow overflow-hidden rounded-md p-6 mb-8 md:mb-0">
+                            <div className="md:flex">
+                                <div className="md:w-1/2 self-center mb-8 md:mb-0">
                                     <h2 className="text-2xl font-semibold">Getting started</h2>
                                     <p className="text-gray-600 text-sm">Steps you should take to get started with Calendso.</p>
                                 </div>
-                                <div className="w-1/2">
+                                <div className="md:w-1/2">
                                     <div className="flow-root">
                                         <ul className="-mb-8">
                                             {timeline.map((event, eventIdx) => (
@@ -206,10 +211,13 @@ export default function Home(props) {
                                     <li className="pb-4 flex">
                                         {integration.type == 'google_calendar' && <img className="h-10 w-10 mr-2" src="integrations/google-calendar.png" alt="Google Calendar" />}
                                         {integration.type == 'office365_calendar' && <img className="h-10 w-10 mr-2" src="integrations/office-365.png" alt="Office 365 / Outlook.com Calendar" />}
+                                        {integration.type == 'zoom_video' && <img className="h-10 w-10 mr-2" src="integrations/zoom.png" alt="Zoom" />}
                                         <div className="ml-3">
                                             {integration.type == 'office365_calendar' && <p className="text-sm font-medium text-gray-900">Office 365 / Outlook.com Calendar</p>}
                                             {integration.type == 'google_calendar' && <p className="text-sm font-medium text-gray-900">Google Calendar</p>}
-                                            <p className="text-sm text-gray-500">Calendar Integration</p>
+                                            {integration.type == 'zoom_video' && <p className="text-sm font-medium text-gray-900">Zoom</p>}
+                                            {integration.type.endsWith('_calendar') && <p className="text-sm text-gray-500">Calendar Integration</p>}
+                                            {integration.type.endsWith('_video') && <p className="text-sm text-gray-500">Video Conferencing</p>}
                                         </div>
                                     </li>
                                 )}
@@ -251,6 +259,11 @@ export default function Home(props) {
                                         </div>
                                     </li>
                                 ))}
+                                {props.eventTypes.length == 0 &&
+                                    <div className="text-center text-gray-400 py-2">
+                                        <p>You haven't created any event types.</p>
+                                    </div>
+                                }
                             </ul>
                         </div>
                     </div>
